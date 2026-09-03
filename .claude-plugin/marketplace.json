@@ -1,0 +1,23 @@
+{
+  "name": "auxfirst",
+  "owner": {
+    "name": "auxfirst agency",
+    "url": "https://auxfirst.com"
+  },
+  "metadata": {
+    "description": "Skills for building agents an organisation can actually own.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "auxfirst",
+      "source": "./",
+      "description": "Score every action an agent can take, cap its autonomy at the hottest dimension, and write the mandate, exceptions and owner's manual behind it.",
+      "version": "1.0.0",
+      "author": { "name": "auxfirst agency", "url": "https://auxfirst.com" },
+      "homepage": "https://auxfirst.com/auxfirst-skill.md",
+      "license": "CC-BY-4.0",
+      "keywords": ["agents", "autonomy", "governance", "aux", "supervision", "agent-ownership"]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "auxfirst",
+  "description": "Decide how much autonomy an AI agent may have, action by action, and produce the mandate, controls and owner's manual that make it defensible.",
+  "version": "1.0.0",
+  "author": { "name": "auxfirst agency", "url": "https://auxfirst.com" },
+  "homepage": "https://auxfirst.com",
+  "repository": "https://github.com/auxfirst/auxfirst-skill-global",
+  "license": "CC-BY-4.0",
+  "keywords": ["agents", "autonomy", "governance", "aux", "supervision"]
+}

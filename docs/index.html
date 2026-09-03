@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>auxfirst — the skill for agents an organisation can own</title>
+<meta name="description" content="A Claude skill that scores every action an agent can take, caps its autonomy at the hottest dimension, and writes the mandate, exceptions and owner's manual behind it.">
+<meta property="og:title" content="auxfirst — building trustworthy agents">
+<meta property="og:description" content="An action is as hot as its hottest dimension. No averaging.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230b0d10'/><path d='M27 72 50 26l23 46' stroke='%23e8a33d' stroke-width='9' fill='none' stroke-linejoin='round'/></svg>">
+<style>
+  :root{
+    --ink:#0b0d10; --panel:#12161b; --line:#232a32; --line-soft:#1a2028;
+    --fg:#e9edf2; --muted:#98a4b3; --dim:#6f7b8a;
+    --accent:#e8a33d; --accent-soft:#3a2b16;
+    --low:#4ea87b; --lowmed:#7fb069; --medium:#e8c04d; --high:#e8853d; --critical:#e05a4e;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:ui-sans-serif,-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    --serif:ui-serif,Georgia,"Iowan Old Style","Times New Roman",serif;
+    --maxw:940px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--ink); color:var(--fg);
+    font:16px/1.65 var(--sans);
+    background-image:radial-gradient(900px 500px at 15% -8%, #1a2029 0%, transparent 60%);
+  }
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid transparent}
+  a:hover{border-bottom-color:var(--accent)}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
+  header{padding:88px 0 56px; border-bottom:1px solid var(--line-soft)}
+  .eyebrow{font:12px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+  h1{font:600 clamp(44px,9vw,86px)/0.95 var(--serif); margin:18px 0 0; letter-spacing:-.03em}
+  .lede{font-size:clamp(18px,2.4vw,22px); color:var(--muted); max-width:44ch; margin:22px 0 0; line-height:1.5}
+  .cta{display:flex; flex-wrap:wrap; gap:10px; margin-top:34px}
+  .btn{
+    display:inline-block; padding:11px 18px; border-radius:9px; font-size:14px; font-weight:600;
+    background:var(--accent); color:#17120a; border:1px solid var(--accent)
+  }
+  .btn:hover{filter:brightness(1.08); border-bottom-color:var(--accent)}
+  .btn.ghost{background:transparent; color:var(--fg); border-color:var(--line)}
+  .btn.ghost:hover{border-color:var(--accent); color:var(--accent)}
+  section{padding:64px 0; border-bottom:1px solid var(--line-soft)}
+  h2{font:600 clamp(24px,3.4vw,32px)/1.2 var(--serif); margin:0 0 8px; letter-spacing:-.02em}
+  h3{font-size:14px; font-family:var(--mono); text-transform:uppercase; letter-spacing:.12em; color:var(--dim); margin:36px 0 12px; font-weight:500}
+  .sub{color:var(--muted); margin:0 0 28px; max-width:62ch}
+  p{max-width:68ch}
+  blockquote{
+    margin:0; padding:22px 26px; border-left:3px solid var(--accent);
+    background:linear-gradient(90deg,var(--accent-soft),transparent 100%);
+    border-radius:0 10px 10px 0; font:500 clamp(19px,2.6vw,25px)/1.4 var(--serif)
+  }
+  blockquote small{display:block; margin-top:12px; font:400 15px/1.5 var(--sans); color:var(--muted); font-family:var(--sans)}
+  pre{
+    max-width:100%;
+    background:var(--panel); border:1px solid var(--line); border-radius:11px;
+    padding:18px 20px; overflow-x:auto; font:13px/1.7 var(--mono); color:#cbd5e1; margin:0
+  }
+  pre .c{color:var(--dim)}
+  pre .k{color:var(--accent)}
+  table{width:100%; min-width:560px; border-collapse:collapse; font-size:14.5px; margin-top:6px}
+  .scroll{max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch}
+  th{
+    text-align:left; font:11px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase;
+    color:var(--dim); font-weight:500; padding:0 14px 12px 0; border-bottom:1px solid var(--line)
+  }
+  td{padding:14px 14px 14px 0; border-bottom:1px solid var(--line-soft); vertical-align:top; color:var(--muted)}
+  td:first-child{color:var(--fg); font-weight:600; white-space:nowrap}
+  .pill{display:inline-block; padding:3px 10px; border-radius:999px; font:11px/1.5 var(--mono); letter-spacing:.06em; border:1px solid}
+  .b-LOW{color:var(--low); border-color:color-mix(in srgb,var(--low) 45%,transparent); background:color-mix(in srgb,var(--low) 12%,transparent)}
+  .b-LOWMED{color:var(--lowmed); border-color:color-mix(in srgb,var(--lowmed) 45%,transparent); background:color-mix(in srgb,var(--lowmed) 12%,transparent)}
+  .b-MEDIUM{color:var(--medium); border-color:color-mix(in srgb,var(--medium) 45%,transparent); background:color-mix(in srgb,var(--medium) 12%,transparent)}
+  .b-HIGH{color:var(--high); border-color:color-mix(in srgb,var(--high) 45%,transparent); background:color-mix(in srgb,var(--high) 12%,transparent)}
+  .b-CRITICAL{color:var(--critical); border-color:color-mix(in srgb,var(--critical) 45%,transparent); background:color-mix(in srgb,var(--critical) 12%,transparent)}
+
+  /* scorer */
+  .scorer{display:grid; grid-template-columns:1.1fr .9fr; gap:26px; align-items:start}
+  .scorer>*,.grid2>*{min-width:0}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:22px}
+  .dim{margin:0 0 20px}
+  .dim:last-child{margin-bottom:0}
+  .dim-head{display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-bottom:8px}
+  .dim-name{font-weight:600; font-size:14.5px}
+  .dim-q{font-size:12.5px; color:var(--dim)}
+  .dim-val{font:13px/1 var(--mono); color:var(--dim); min-width:1.2em; text-align:right}
+  input[type=range]{
+    width:100%; -webkit-appearance:none; appearance:none; height:5px; border-radius:99px;
+    background:var(--line); outline:none; margin:0
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:17px; height:17px; border-radius:50%;
+    background:var(--fg); border:3px solid var(--ink); box-shadow:0 0 0 1px var(--line); cursor:pointer
+  }
+  input[type=range]::-moz-range-thumb{
+    width:14px; height:14px; border-radius:50%; background:var(--fg);
+    border:3px solid var(--ink); box-shadow:0 0 0 1px var(--line); cursor:pointer
+  }
+  .hot{color:var(--accent)}
+  .verdict-band{font:600 clamp(30px,5vw,44px)/1 var(--serif); letter-spacing:-.02em; margin:10px 0 2px}
+  .verdict-mode{font:13px/1.5 var(--mono); color:var(--muted)}
+  .verdict-posture{font-size:14px; color:var(--muted); margin:16px 0 0; border-top:1px solid var(--line-soft); padding-top:16px}
+  .driver{font:12px/1.6 var(--mono); color:var(--dim); margin-top:14px}
+  .req{margin:16px 0 0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:6px}
+  .req li{font:11.5px/1 var(--mono); padding:5px 9px; border:1px solid var(--line); border-radius:6px; color:var(--muted)}
+  .preset{background:none; border:1px solid var(--line); color:var(--muted); font:12px/1 var(--sans);
+    padding:7px 11px; border-radius:999px; cursor:pointer}
+  .preset:hover{border-color:var(--accent); color:var(--accent)}
+  .presets{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+  .note{font-size:13.5px; color:var(--dim); max-width:66ch}
+  footer{padding:56px 0 80px; color:var(--dim); font-size:14px}
+  footer em{color:var(--muted); font-family:var(--serif); font-size:16px; font-style:italic}
+  .foot-links{display:flex; gap:18px; flex-wrap:wrap; margin-bottom:26px}
+  @media (max-width:760px){
+    .scorer,.grid2{grid-template-columns:1fr}
+    header{padding:60px 0 40px}
+    section{padding:48px 0}
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .verdict-band{transition:color .25s ease}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">A Claude skill · CC BY 4.0 · auxfirst</div>
+    <h1>auxfirst</h1>
+    <p class="lede">Score every action an agent can take, cap its autonomy at the hottest dimension, and write the mandate behind it.</p>
+    <div class="cta">
+      <a class="btn" href="https://github.com/auxfirst/auxfirst-skill-global">Get the skill</a>
+      <a class="btn ghost" href="#scorer">Score an action</a>
+      <a class="btn ghost" href="https://auxfirst.com">auxfirst.com</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <blockquote>
+      An action is as hot as its hottest dimension. No averaging.
+      <small>Four cool dials never buy back one hot one. A perfectly reversible, narrow, internal action that signs a contract is still a contract.</small>
+    </blockquote>
+    <p style="margin-top:30px">Most agent guidance answers <em>can the model do this?</em> This skill answers the question that actually blocks production: <strong>given an action this agent can take, what does the team owe before it is allowed to take it unsupervised?</strong></p>
+    <p class="note">It runs per action, never per agent. An agent that can do nine things has nine answers, and averaging them is the mistake the whole method exists to prevent.</p>
+  </div>
+</section>
+
+<section id="scorer">
+  <div class="wrap">
+    <h2>Score an action</h2>
+    <p class="sub">Five dimensions, 0 to 4. The band is the highest single score — the same arithmetic the bundled <code>heat.py</code> applies. Score the action as the agent would actually perform it, with wrong inputs, not as policy says it should.</p>
+
+    <div class="presets">
+      <button class="preset" data-scores="1,0,3,3,1">Send an invoice</button>
+      <button class="preset" data-scores="0,0,1,0,1">Update a CRM note</button>
+      <button class="preset" data-scores="2,3,1,0,4">Grant production access</button>
+      <button class="preset" data-scores="0,0,0,0,0">Summarise a document</button>
+      <button class="preset" data-scores="4,3,2,4,3">Sign a contract</button>
+    </div>
+
+    <div class="scorer">
+      <div class="card" id="dials"></div>
+      <div class="card">
+        <div class="eyebrow">Verdict</div>
+        <div class="verdict-band" id="band">LOW</div>
+        <div class="verdict-mode" id="mode">Max autonomy: Autonomous</div>
+        <div class="driver" id="driver"></div>
+        <p class="verdict-posture" id="posture"></p>
+        <h3 style="margin:22px 0 10px">Required primitives</h3>
+        <ul class="req" id="prims"></ul>
+      </div>
+    </div>
+    <p class="note" style="margin-top:22px">The band is a ceiling, not a target. The design work is moving an action <em>down</em> a band: a dry-run that shows the diff, a hard cap on value, a hold window, a short-lived scoped credential, or a reversible representation that a separate cheaper action promotes. A team that cannot move an action down a band has not designed it — it has only classified it.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>The five bands</h2>
+    <p class="sub">The band sets the control posture and the maximum permitted autonomy mode. Nothing above the cap ships, whatever the demo looked like.</p>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>Band</th><th>Control posture</th><th>Signature</th><th>Max autonomy mode</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill b-LOW">LOW</span></td><td>Auto-run. Log everything.</td><td>Read-only or draft-only; nothing leaves the building</td><td>Autonomous</td></tr>
+        <tr><td><span class="pill b-LOWMED">LOW-MED</span></td><td>Auto-run, sampled review, one-click undo.</td><td>Internal writes; fully reversible, narrow scope</td><td>Act-and-notify</td></tr>
+        <tr><td><span class="pill b-MEDIUM">MEDIUM</span></td><td>Propose, then batch-approve.</td><td>Touches a customer or shared system; reversible with effort</td><td>Review-before-act</td></tr>
+        <tr><td><span class="pill b-HIGH">HIGH</span></td><td>Named approver, per instance.</td><td>External commercial communication; money or access moves</td><td>Approve-each-action</td></tr>
+        <tr><td><span class="pill b-CRITICAL">CRITICAL</span></td><td>Human executes. Agent prepares.</td><td>Irreversible or legally binding; production authority</td><td>Human-only</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>The loop it runs</h2>
+    <p class="sub">Steps 1&ndash;5 are mechanical, and the bundled script does them so nobody quietly averages. Steps 6&ndash;9 are where the judgement lives.</p>
+    <pre><span class="k">1. LIST</span>     the verbs. What can this agent actually do?
+<span class="k">2. SCORE</span>    each verb on five dimensions, 0-4.
+<span class="k">3. BAND</span>     take the highest single score. That is the heat band.
+<span class="k">4. CAP</span>      the band sets the maximum permitted autonomy mode.
+<span class="k">5. OWE</span>      the mode sets the required patterns and supervision primitives.
+<span class="k">6. WRITE</span>    the mandate, action by action.
+<span class="k">7. EXCEPT</span>   decide the behaviour for each failure mode.
+<span class="k">8. EVALUATE</span> against the ten heuristics before ship.
+<span class="k">9. CHECK</span>    the twenty-four questions before calling it production.</pre>
+
+    <div class="grid2" style="margin-top:34px">
+      <div>
+        <h3>Two rules that decide what counts</h3>
+        <p><strong>A recommendation is not a control.</strong> Where a behaviour is something the system <em>does</em>, it counts. Where it is something a builder <em>should do</em>, it does not. "We'll add approval gates" in a design doc is not an approval gate.</p>
+        <p><strong>Enforcement lives in a mechanism, not in a prompt.</strong> A prompt saying "only update qualification information" is a request. A tool that exposes only the qualification field is a boundary.</p>
+      </div>
+      <div>
+        <h3>The mandate has four values</h3>
+        <p>Autonomous · Human approval · Human only · Prohibited. There is no fifth, and no "semi-autonomous" — ambiguity in that column is where trust collapses.</p>
+        <p>Every row also names what enforces it. An empty enforcement cell means the row is aspirational, and that column is the whole difference between a governance document and a system.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Install</h2>
+    <p class="sub">It fires on its own — no slash command. Ask something like <em>"we're about to let the support bot issue refunds instead of drafting them, what do we need first?"</em> and it takes over.</p>
+    <div class="grid2">
+      <div>
+        <h3>Claude Code · plugin</h3>
+        <pre>/plugin marketplace add auxfirst/auxfirst-skill-global
+/plugin install auxfirst@auxfirst</pre>
+      </div>
+      <div>
+        <h3>Claude Code · plain skill</h3>
+        <pre>git clone https://github.com/auxfirst/auxfirst-skill-global.git
+ln -s "$PWD/auxfirst-skill-global/skills/auxfirst" \
+      ~/.claude/skills/auxfirst</pre>
+      </div>
+    </div>
+    <h3>Score a batch from the command line</h3>
+    <pre>$ python skills/auxfirst/scripts/heat.py --score 1,0,3,3,1 --action "send an invoice"
+
+  reversibility  1
+  blast radius   0
+  exposure       3  <span class="c">&lt;- hottest</span>
+  commitment     3  <span class="c">&lt;- hottest</span>
+  authority      1
+
+  <span class="k">BAND            HIGH</span>  <span class="c">(highest single score, never the mean)</span>
+  MAX AUTONOMY    Approve-each-action</pre>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What it will not tell you</h2>
+    <div class="grid2">
+      <div>
+        <h3>Whether the agent is safe</h3>
+        <p>It tells you whether the organisation can see, approve and undo what the agent did. Those are different claims, and the second is the only one a document can support.</p>
+      </div>
+      <div>
+        <h3>A single score</h3>
+        <p>Capability and supervision are reported separately and never combined, because the gap between them is the finding. An agent that can do a great deal and can be supervised very little is the specific thing worth knowing — one number hides it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-links">
+      <a href="https://github.com/auxfirst/auxfirst-skill-global">Repository</a>
+      <a href="https://github.com/auxfirst/auxfirst-skill-global/blob/main/skills/auxfirst/SKILL.md">SKILL.md</a>
+      <a href="https://auxfirst.com/action-heat-ladder.html">The Action Heat Ladder</a>
+      <a href="https://auxfirst.com/agent-owners-manual.html">The Agent Owner's Manual</a>
+      <a href="https://auxfirst.com">auxfirst.com</a>
+    </div>
+    <em>auxfirst designs relationships between users and agents. The agent is a user. The relationship is the product. Trust is the moat.</em>
+    <p style="margin-top:22px; font-size:13px">Assembled from published auxfirst material. Definitions are CC BY 4.0 — reuse them, adapt them, keep the attribution. © auxfirst agency 2026.</p>
+  </div>
+</footer>
+
+<script>
+const DIMENSIONS = [
+  ["Reversibility", "Can we take it back?"],
+  ["Blast radius", "How far does it spread?"],
+  ["Exposure", "Who sees it?"],
+  ["Commitment", "What does it bind us to?"],
+  ["Authority", "What is it allowed to touch?"]
+];
+const BANDS = ["LOW","LOW-MED","MEDIUM","HIGH","CRITICAL"];
+const MODE = {
+  "LOW":"Autonomous", "LOW-MED":"Act-and-notify", "MEDIUM":"Review-before-act",
+  "HIGH":"Approve-each-action", "CRITICAL":"Human-only"
+};
+const POSTURE = {
+  "LOW":"Auto-run. Log everything — the log is the control.",
+  "LOW-MED":"Auto-run with sampled review on a cadence; every write has one-click undo.",
+  "MEDIUM":"Propose, then batch-approve. The agent queues the action with its rationale.",
+  "HIGH":"A named accountable human approves each instance before execution, logged with rationale and identity.",
+  "CRITICAL":"The agent assembles evidence, draft and checklist. A human — sometimes two — performs the action."
+};
+const PRIMITIVES = [
+  ["agent identity and disclosure", 0],
+  ["action receipt", 1],
+  ["reversal", 1],
+  ["consequence-scaled approval", 2],
+  ["escalation handoff", 2],
+  ["provenance at the decision point", 2]
+];
+const VAR = {"LOW":"--low","LOW-MED":"--lowmed","MEDIUM":"--medium","HIGH":"--high","CRITICAL":"--critical"};
+
+const dials = document.getElementById("dials");
+DIMENSIONS.forEach(([name, question], i) => {
+  const row = document.createElement("div");
+  row.className = "dim";
+  row.innerHTML =
+    '<div class="dim-head"><span class="dim-name" data-name="' + i + '">' + name + '</span>' +
+    '<span class="dim-q">' + question + '</span>' +
+    '<span class="dim-val" id="v' + i + '">0</span></div>' +
+    '<input type="range" min="0" max="4" step="1" value="0" id="s' + i + '" aria-label="' + name + '">';
+  dials.appendChild(row);
+});
+
+const sliders = DIMENSIONS.map((_, i) => document.getElementById("s" + i));
+
+function paint(){
+  const scores = sliders.map(s => Number(s.value));
+  const peak = Math.max(...scores);
+  const band = BANDS[peak];
+
+  scores.forEach((value, i) => {
+    const hot = value === peak && peak > 0;
+    const valueEl = document.getElementById("v" + i);
+    valueEl.textContent = value;
+    valueEl.classList.toggle("hot", hot);
+    document.querySelector('[data-name="' + i + '"]').classList.toggle("hot", hot);
+  });
+
+  const bandEl = document.getElementById("band");
+  bandEl.textContent = band;
+  bandEl.style.color = "var(" + VAR[band] + ")";
+  document.getElementById("mode").textContent = "Max autonomy: " + MODE[band];
+  document.getElementById("posture").textContent = POSTURE[band];
+
+  const drivers = DIMENSIONS.filter((_, i) => scores[i] === peak).map(d => d[0].toLowerCase());
+  document.getElementById("driver").textContent =
+    peak === 0 ? "Nothing is hot. Log it and move on."
+               : "Driven by " + drivers.join(" and ") + " at " + peak + ".";
+
+  const prims = document.getElementById("prims");
+  prims.innerHTML = "";
+  PRIMITIVES.filter(([, threshold]) => BANDS.indexOf(band) >= threshold)
+    .forEach(([name]) => {
+      const li = document.createElement("li");
+      li.textContent = name;
+      prims.appendChild(li);
+    });
+}
+
+sliders.forEach(s => s.addEventListener("input", paint));
+document.querySelectorAll(".preset").forEach(button => {
+  button.addEventListener("click", () => {
+    button.dataset.scores.split(",").forEach((value, i) => { sliders[i].value = value; });
+    paint();
+  });
+});
+paint();
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+[
+  { "query": "we're about to let our support copilot actually issue refunds instead of just drafting them. finance is nervous, i'm nervous, what do i need to have in place before we flip that on", "should_trigger": true },
+  { "query": "Our SDR agent is described in the spec as 'semi-autonomous'. Security review sent it back and asked what that means. How should I rewrite it?", "should_trigger": true },
+  { "query": "the pipeline agent demoed beautifully in march and it's still not in prod. every time we get close someone in risk asks a question nobody can answer. how do i break the loop", "should_trigger": true },
+  { "query": "I need to write an internal AI policy that our engineering teams will actually follow rather than route around. It needs to say something concrete about what agents are allowed to do.", "should_trigger": true },
+  { "query": "we've got an agent that updates hubspot deal stages and it wrote garbage into 400 records overnight. leadership wants to know what we're changing. what should i propose", "should_trigger": true },
+  { "query": "evaluating three agent platforms for a client. what should i actually be checking beyond the demo? they all claim human in the loop", "should_trigger": true },
+  { "query": "Can you review this agent design doc? It's a claims-processing bot that reads policies, decides eligibility and pays out under 2k automatically.", "should_trigger": true },
+  { "query": "who should own an agent once the project team disbands? right now it's owned by 'the automation squad' and half of them rolled off", "should_trigger": true },
+  { "query": "quick one - our deploy agent has a github token with write access to every repo but the prompt tells it to only touch the docs repo. is that fine", "should_trigger": true },
+  { "query": "help me write the AGENTS.md for this workspace, and separately my CTO wants a one pager per agent for the risk register", "should_trigger": true },
+  { "query": "what happens when nobody responds to the agent's escalation? we built the queue but never decided the timeout behaviour", "should_trigger": true },
+
+  { "query": "my rag pipeline retrieves the wrong chunks about 30% of the time, i'm using text-embedding-3-small with 512 token chunks. should i try a reranker", "should_trigger": false },
+  { "query": "which claude model should i use for a high volume classification job, opus or haiku? cost matters a lot here", "should_trigger": false },
+  { "query": "the system prompt for our writing assistant is 4k tokens and it keeps ignoring the tone rules near the end. how do i restructure it", "should_trigger": false },
+  { "query": "compare langgraph and the agent sdk for building a multi step research agent, mostly interested in how they handle state", "should_trigger": false },
+  { "query": "our inference bill tripled last month. where do i start looking - caching, batching, smaller model?", "should_trigger": false },
+  { "query": "write me a job description for an AI engineer who'll build internal agents", "should_trigger": false },
+  { "query": "i need a SOC 2 readiness checklist for our SaaS product, we're doing type 2 in q3", "should_trigger": false },
+  { "query": "review this react component that renders the approval modal, i think the loading state is buggy", "should_trigger": false },
+  { "query": "explain how function calling works in the messages api, with an example of a tool that hits our internal search endpoint", "should_trigger": false }
+]
