@@ -16,7 +16,7 @@
       "version": "1.0.0",
       "author": { "name": "auxfirst agency", "url": "https://auxfirst.com" },
       "homepage": "https://auxfirst.com/auxfirst-skill.md",
-      "license": "CC-BY-4.0",
+      "license": "MIT AND CC-BY-4.0",
       "keywords": ["agents", "autonomy", "governance", "aux", "supervision", "agent-ownership"]
     }
   ]

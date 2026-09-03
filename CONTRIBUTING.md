@@ -45,5 +45,6 @@ those assertions if you change the mapping deliberately.
 
 ## Provenance
 
-The material is CC BY 4.0 from the auxfirst canon. Adaptations are welcome;
-attribution stays.
+The prose is CC BY 4.0 from the auxfirst canon; the scripts are MIT. If it
+executes, it is MIT — if a person or a model reads it, it is CC BY 4.0.
+Adaptations are welcome; attribution stays.

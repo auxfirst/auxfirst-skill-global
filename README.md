@@ -178,10 +178,21 @@ autonomy mode, the band thresholds for the six supervision primitives, the
 "Enforced by" column in the mandate template, the first-five ordering of the
 artefact list, and the numeric score-to-band mapping the script applies.
 
-## Licence
+## License
 
-[CC BY 4.0](LICENSE) · auxfirst agency 2026. Reuse it, adapt it, keep the
-attribution.
+Dual-licensed, and the split is simple: **if it executes, it is MIT. If it is
+read by a person or a model, it is CC BY 4.0.**
+
+| What | License | Covers |
+|---|---|---|
+| Code | [MIT](LICENSE) | `skills/auxfirst/scripts/**`, `tools/**` |
+| Content | [CC BY 4.0](LICENSE) | `SKILL.md`, `references/**`, `assets/**`, this README |
+
+Use the code in commercial products with no obligation beyond the copyright
+notice. Reuse and adapt the frameworks freely — keep the attribution:
+
+> Based on the auxfirst skill by [auxfirst agency](https://auxfirst.com/),
+> licensed under CC BY 4.0.
 
 ---
 
