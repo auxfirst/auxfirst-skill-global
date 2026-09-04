@@ -273,6 +273,9 @@ one number hides it.
   work can be delegated at all.
 - `references/anti-patterns.md` — named failure modes and precise vocabulary.
   Skim early; it gives you the words to name what you are seeing.
+- `references/skill-map.md` — Mermaid map of the whole procedure: trigger,
+  nine-step loop, scoring, mandate, exceptions, heuristics, production check,
+  owner's manual, artefacts. Read when you need to see how the pieces join.
 - `assets/mandate-template.md`, `assets/owners-manual-template.md`,
   `assets/autonomy-map-template.md` — blank artefacts to fill in with the user.
 - `scripts/heat.py` — run for scoring. `python scripts/heat.py --score 1,0,3,3,1

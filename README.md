@@ -126,7 +126,8 @@ skills/auxfirst/
 │   ├── production-check.md               the 24 questions, scoring bands, 22 artefacts
 │   ├── owners-manual.md                  15-field manual, 5 forms of control, AGENTS.md evidence
 │   ├── workflow-readiness.md             the 3-layer, 12-check operability test
-│   └── anti-patterns.md                  named failure modes and precise vocabulary
+│   ├── anti-patterns.md                  named failure modes and precise vocabulary
+│   └── skill-map.md                      Mermaid map of the whole procedure
 ├── assets/                               blank mandate, owner's manual, autonomy map
 ├── scripts/heat.py                       deterministic scoring, no dependencies
 └── evals/                                trigger eval set + output test prompts
